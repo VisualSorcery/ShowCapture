@@ -8,9 +8,9 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("ShowCapture")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyTitle("ShowCapture")>
+<Assembly: AssemblyDescription("A library for working with the ShowCapture file format.")>
+<Assembly: AssemblyCompany("Visual Sorcery")>
 <Assembly: AssemblyProduct("ShowCapture")> 
 <Assembly: AssemblyCopyright("Copyright ©  2015")> 
 <Assembly: AssemblyTrademark("")> 
