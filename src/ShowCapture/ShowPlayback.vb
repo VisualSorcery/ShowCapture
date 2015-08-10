@@ -128,8 +128,6 @@ Public Class ShowPlayback
                     Next
                 End If
 
-
-
             End If
 
             Return payloads

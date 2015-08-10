@@ -15,27 +15,40 @@ Public Class ShowCapture
     Private glossary As New KeyframeGlossary
     Private output As System.IO.FileStream
 
-    Public Sub New(path As String, framerate As Single, keyframeFrequency As Integer)
+    Public Property IsCapturing As Boolean
+
+    Public Sub New()
+
+    End Sub
+
+    Public Sub StartCapture(path As String, framerate As Single, keyframeFrequency As Integer)
+
+        If IsCapturing Then
+            Throw New InvalidOperationException("A capture is already in progress.")
+        End If
 
         Me.keyframeFrequency = keyframeFrequency
         Me.framerate = framerate
         Me.path = path
 
-    End Sub
-
-    Public Sub StartCapture()
-
+        IsCapturing = True
         output = New FileStream(path, FileMode.Create)
         OutputHeader()
         StartFrame()
+
 
     End Sub
 
     Public Sub EndCapture()
 
+        If IsCapturing = False Then
+            Throw New InvalidOperationException("There is no capture currently in progress.")
+        End If
+
         OutputGlossary()
         OutputFrameCount()
         output.Close()
+        IsCapturing = False
 
     End Sub
 
@@ -45,7 +58,6 @@ Public Class ShowCapture
         StartFrame()
 
     End Sub
-
 
     Private Sub StartFrame()
 
@@ -100,29 +112,6 @@ Public Class ShowCapture
 
     End Sub
 
-    'Public Sub AddFrame(universeList As List(Of DMXUniverse))
-
-    '    Dim isKeyframe As Boolean = currentFrame Mod keyframeFrequency = 0
-    '    frame = New ShowCaptureFrame(isKeyframe)
-    '    frame.FrameNumber = currentFrame
-
-    '    For Each universe In universeList
-    '        frame.Payloads.Add(CreateFrame(universe))
-    '    Next
-
-    '    If frame.IsKeyFrame Then
-    '        Dim glossaryItem As New KeyframeGlossaryItem(frame.FrameNumber, output.Position)
-    '        glossary.Items.Add(glossaryItem)
-    '    End If
-
-    '    dmxHistory = universeList
-
-    '    OutputFrame()
-
-    '    currentFrame += 1
-
-    'End Sub
-
     Private Sub OutputHeader()
 
         output.Position = 0
@@ -158,7 +147,6 @@ Public Class ShowCapture
     End Sub
 
     Private Function CreateUniverse(universe As DMXUniverse) As DMXUniversePayload
-
 
         Dim payload As New DMXUniversePayload()
         Dim isKeyframe As Boolean = currentFrame Mod keyframeFrequency = 0
