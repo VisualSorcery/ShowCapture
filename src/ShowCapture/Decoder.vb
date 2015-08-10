@@ -1,6 +1,9 @@
 ﻿Imports System.IO
+Imports ShowCapture.Codec
+Imports ShowCapture.Codec.InternalPayloads
+Imports ShowCapture.Payloads
 
-Public Class ShowPlayback
+Public Class Decoder
     Implements IDisposable
 
     Private input As FileStream
@@ -49,26 +52,11 @@ Public Class ShowPlayback
         input.Close()
     End Sub
 
-    Private Sub LoadHeader()
-
-        Dim headerBuffer(19) As Byte
-
-        input.Position = 0
-
-        input.Read(headerBuffer, 0, 20)
-
-        _frameRate = BitConverter.ToSingle(headerBuffer, 0)
-        _keyframeFrequency = BitConverter.ToInt16(headerBuffer, 4)
-        _frameCount = BitConverter.ToInt32(headerBuffer, 6)
-        _duration = FrameCount / FrameRate
-
-    End Sub
-
-    Public Function GetFrame(frameNumber As Integer) As List(Of DataContainer)
+    Public Function GetFrame(frameNumber As Integer) As Frame
 
         If frameNumber < FrameCount And frameNumber >= 0 Then
 
-            Dim payloads As New List(Of DataContainer)
+            Dim payloads As New List(Of Payload)
 
             Dim keyframeIndex As Integer = Math.Floor(frameNumber / KeyframeFrequency)
             Dim closestKeyframe As KeyframeGlossaryItem
@@ -96,14 +84,14 @@ Public Class ShowPlayback
                 If frameNumber <> closestKeyframe.FrameNumber Then
                     For i = closestKeyframe.FrameNumber + 1 To frameNumber
 
-                        Dim frame As ShowCaptureFrame = ShowCaptureFrame.ReadFromStream(input, input.Position)
+                        Dim captureFrame As ShowCaptureFrame = ShowCaptureFrame.ReadFromStream(input, input.Position)
 
                         For j = 0 To payloads.Count - 1
-                            For k = 0 To frame.Payloads.Count - 1
+                            For k = 0 To captureFrame.Payloads.Count - 1
 
-                                If TypeOf frame.Payloads(k) Is DMXUniversePayload And TypeOf payloads(j) Is DMXUniverse Then
+                                If TypeOf captureFrame.Payloads(k) Is DMXUniversePayload And TypeOf payloads(j) Is DMXUniverse Then
 
-                                    Dim universePayload As DMXUniversePayload = CType(frame.Payloads(k), DMXUniversePayload)
+                                    Dim universePayload As DMXUniversePayload = CType(captureFrame.Payloads(k), DMXUniversePayload)
 
                                     Dim container As DMXUniverse = CType(payloads(j), DMXUniverse)
 
@@ -111,14 +99,14 @@ Public Class ShowPlayback
                                         LatestTakesPrecedenceMerge(payloads(j), universePayload)
                                     End If
 
-                                ElseIf TypeOf frame.Payloads(k) Is MidiShowControlPayload And i = frameNumber Then
+                                ElseIf TypeOf captureFrame.Payloads(k) Is MidiShowControlPayload And i = frameNumber Then
 
-                                    Dim msc As MidiShowControlPayload = CType(frame.Payloads(j), MidiShowControlPayload)
+                                    Dim msc As MidiShowControlPayload = CType(captureFrame.Payloads(j), MidiShowControlPayload)
                                     payloads.Add(msc.GetContainer)
 
-                                ElseIf TypeOf frame.Payloads(k) Is LinearTimeCodePayload And i = frameNumber Then
+                                ElseIf TypeOf captureFrame.Payloads(k) Is LinearTimeCodePayload And i = frameNumber Then
 
-                                    Dim ltc As LinearTimeCodePayload = CType(frame.Payloads(j), LinearTimeCodePayload)
+                                    Dim ltc As LinearTimeCodePayload = CType(captureFrame.Payloads(j), LinearTimeCodePayload)
                                     payloads.Add(ltc.GetContainer)
 
                                 End If
@@ -130,11 +118,28 @@ Public Class ShowPlayback
 
             End If
 
-            Return payloads
+            Dim frame As New Frame(frameNumber, payloads)
+            Return frame
+
         Else
             Throw New IndexOutOfRangeException("Requested frame outside of valid range")
         End If
     End Function
+
+    Private Sub LoadHeader()
+
+        Dim headerBuffer(19) As Byte
+
+        input.Position = 0
+
+        input.Read(headerBuffer, 0, 20)
+
+        _frameRate = BitConverter.ToSingle(headerBuffer, 0)
+        _keyframeFrequency = BitConverter.ToInt16(headerBuffer, 4)
+        _frameCount = BitConverter.ToInt32(headerBuffer, 6)
+        _duration = FrameCount / FrameRate
+
+    End Sub
 
     Private Sub LatestTakesPrecedenceMerge(originalUniverse As DMXUniverse, newUniverse As DMXUniversePayload)
 

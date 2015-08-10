@@ -62,13 +62,14 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Containers\DMXPayloadValue.vb" />
-    <Compile Include="Containers\DMXUniverse.vb" />
-    <Compile Include="Containers\DataContainer.vb" />
-    <Compile Include="Containers\LinearTimeCodeValue.vb" />
-    <Compile Include="Containers\MidiShowControlCommand.vb" />
-    <Compile Include="Glossary\KeyframeGlossary.vb" />
-    <Compile Include="Glossary\KeyframeGlossaryItem.vb" />
+    <Compile Include="Codec\InternalPayloads\Values\DMXPayloadValue.vb" />
+    <Compile Include="Payloads\DMXUniverse.vb" />
+    <Compile Include="Payloads\Payload.vb" />
+    <Compile Include="Payloads\LinearTimeCodeFrame.vb" />
+    <Compile Include="Payloads\MidiShowControlCommand.vb" />
+    <Compile Include="Codec\KeyframeGlossary.vb" />
+    <Compile Include="Codec\KeyframeGlossaryItem.vb" />
+    <Compile Include="Frame.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -84,13 +85,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Payloads\DMXUniversePayload.vb" />
-    <Compile Include="Payloads\LinearTimeCodePayload.vb" />
-    <Compile Include="Payloads\MidiShowControlPayload.vb" />
-    <Compile Include="Payloads\Payload.vb" />
-    <Compile Include="ShowCapture.vb" />
-    <Compile Include="ShowCaptureFrame.vb" />
-    <Compile Include="ShowPlayback.vb" />
+    <Compile Include="Codec\InternalPayloads\DMXUniversePayload.vb" />
+    <Compile Include="Codec\InternalPayloads\LinearTimeCodePayload.vb" />
+    <Compile Include="Codec\InternalPayloads\MidiShowControlPayload.vb" />
+    <Compile Include="Codec\InternalPayloads\InternalPayload.vb" />
+    <Compile Include="Encoder.vb" />
+    <Compile Include="Codec\ShowCaptureFrame.vb" />
+    <Compile Include="Decoder.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

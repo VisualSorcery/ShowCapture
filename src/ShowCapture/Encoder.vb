@@ -1,6 +1,9 @@
 ﻿Imports System.IO
+Imports ShowCapture.Codec
+Imports ShowCapture.Codec.InternalPayloads
+Imports ShowCapture.Payloads
 
-Public Class ShowCapture
+Public Class Encoder
     Implements IDisposable
 
     Private frame As New ShowCaptureFrame
@@ -21,7 +24,9 @@ Public Class ShowCapture
 
     End Sub
 
-    Public Sub StartCapture(path As String, framerate As Single, keyframeFrequency As Integer)
+#Region "Public Methods"
+
+    Public Sub Initialize(path As String, framerate As Single, keyframeFrequency As Integer)
 
         If IsCapturing Then
             Throw New InvalidOperationException("A capture is already in progress.")
@@ -39,7 +44,30 @@ Public Class ShowCapture
 
     End Sub
 
-    Public Sub EndCapture()
+    Public Sub AddPayload(universe As DMXUniverse)
+
+        frame.Payloads.Add(CreateUniverse(universe))
+        currentDMX.Add(universe)
+
+    End Sub
+
+    Public Sub AddPayload(msc As MidiShowControl)
+
+        Dim mscPayload As New MidiShowControlPayload()
+        mscPayload.SetCommand(msc)
+        frame.Payloads.Add(mscPayload)
+
+    End Sub
+
+    Public Sub AddPayload(ltc As LinearTimeCode)
+
+        Dim ltcPayload As New LinearTimeCodePayload()
+        ltcPayload.SetValue(ltc)
+        frame.Payloads.Add(ltcPayload)
+
+    End Sub
+
+    Public Sub CloseFile()
 
         If IsCapturing = False Then
             Throw New InvalidOperationException("There is no capture currently in progress.")
@@ -58,6 +86,8 @@ Public Class ShowCapture
         StartFrame()
 
     End Sub
+
+#End Region
 
     Private Sub StartFrame()
 
@@ -86,29 +116,6 @@ Public Class ShowCapture
         Next
 
         currentDMX = New List(Of DMXUniverse)
-
-    End Sub
-
-    Public Sub AddPayload(universe As DMXUniverse)
-
-        frame.Payloads.Add(CreateUniverse(universe))
-        currentDMX.Add(universe)
-
-    End Sub
-
-    Public Sub AddPayload(msc As MidiShowControlCommand)
-
-        Dim mscPayload As New MidiShowControlPayload()
-        mscPayload.SetCommand(msc)
-        frame.Payloads.Add(mscPayload)
-
-    End Sub
-
-    Public Sub AddPayload(ltc As LinearTimeCodeValue)
-
-        Dim ltcPayload As New LinearTimeCodePayload()
-        ltcPayload.SetValue(ltc)
-        frame.Payloads.Add(ltcPayload)
 
     End Sub
 
