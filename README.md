@@ -1,7 +1,7 @@
 # ShowCapture
 A .NET library for use in encoding and decoding Visual Sorcery's Show Capture file format.
 
-This format allows for capturing and playing back multiple different live performance related protocols simultaneously. Supported formats currently include DMX, Midi Show Control, and Linear Timecode.
+This format allows for capturing and playing back multiple different live performance related protocols simultaneously. Supported formats currently include DMX, Midi Show Control, and Linear Timecode. An overview of the file format can be found [here](https://docs.google.com/drawings/d/1ZFihuPPBTzsGAcpb7UglUr6_0VAqNu2fDR1VL0ZtNjw/edit?usp=sharing).
 
 ## Usage
 
