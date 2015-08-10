@@ -61,6 +61,8 @@ Public Class Decoder
             Dim keyframeIndex As Integer = Math.Floor(frameNumber / KeyframeFrequency)
             Dim closestKeyframe As KeyframeGlossaryItem
 
+            Dim ancillaryData() As Byte = Nothing
+
             If glossary.Items.Count > keyframeIndex Then
                 closestKeyframe = glossary.Items(keyframeIndex)
 
@@ -85,7 +87,7 @@ Public Class Decoder
                     For i = closestKeyframe.FrameNumber + 1 To frameNumber
 
                         Dim captureFrame As ShowCaptureFrame = ShowCaptureFrame.ReadFromStream(input, input.Position)
-
+                        ancillaryData = captureFrame.AncillaryData
                         For j = 0 To payloads.Count - 1
                             For k = 0 To captureFrame.Payloads.Count - 1
 
@@ -114,11 +116,13 @@ Public Class Decoder
                             Next
                         Next
                     Next
+                Else
+                    ancillaryData = keyframe.AncillaryData
                 End If
 
             End If
 
-            Dim frame As New Frame(frameNumber, payloads)
+            Dim frame As New Frame(frameNumber, payloads, ancillaryData)
             Return frame
 
         Else

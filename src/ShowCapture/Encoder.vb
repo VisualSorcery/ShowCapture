@@ -30,55 +30,87 @@ Public Class Encoder
 
         If IsCapturing Then
             Throw New InvalidOperationException("A capture is already in progress.")
+        Else
+
+            Me.keyframeFrequency = keyframeFrequency
+            Me.framerate = framerate
+            Me.path = path
+
+            IsCapturing = True
+            output = New FileStream(path, FileMode.Create)
+            OutputHeader()
+            StartFrame()
+
         End If
-
-        Me.keyframeFrequency = keyframeFrequency
-        Me.framerate = framerate
-        Me.path = path
-
-        IsCapturing = True
-        output = New FileStream(path, FileMode.Create)
-        OutputHeader()
-        StartFrame()
-
 
     End Sub
 
     Public Sub AddPayload(universe As DMXUniverse)
 
-        frame.Payloads.Add(CreateUniverse(universe))
-        currentDMX.Add(universe)
+        If IsCapturing Then
+
+            frame.Payloads.Add(CreateUniverse(universe))
+            currentDMX.Add(universe)
+
+        Else
+            Throw New InvalidOperationException("There is no encoding operation currently in progress.")
+        End If
 
     End Sub
 
     Public Sub AddPayload(msc As MidiShowControl)
 
-        Dim mscPayload As New MidiShowControlPayload()
-        mscPayload.SetCommand(msc)
-        frame.Payloads.Add(mscPayload)
+        If IsCapturing Then
+
+            Dim mscPayload As New MidiShowControlPayload()
+            mscPayload.SetCommand(msc)
+            frame.Payloads.Add(mscPayload)
+
+        Else
+            Throw New InvalidOperationException("There is no encoding operation currently in progress.")
+        End If
 
     End Sub
 
     Public Sub AddPayload(ltc As LinearTimeCode)
 
-        Dim ltcPayload As New LinearTimeCodePayload()
-        ltcPayload.SetValue(ltc)
-        frame.Payloads.Add(ltcPayload)
+        If IsCapturing Then
+
+            Dim ltcPayload As New LinearTimeCodePayload()
+            ltcPayload.SetValue(ltc)
+            frame.Payloads.Add(ltcPayload)
+
+        Else
+            Throw New InvalidOperationException("There is no encoding operation currently in progress.")
+        End If
 
     End Sub
 
     Public Sub CloseFile()
 
         If IsCapturing = False Then
-            Throw New InvalidOperationException("There is no capture currently in progress.")
+            Throw New InvalidOperationException("There is no encoding operation currently in progress.")
+        Else
+
+            OutputGlossary()
+            OutputFrameCount()
+            output.Close()
+            IsCapturing = False
+
         End If
 
-        OutputGlossary()
-        OutputFrameCount()
-        output.Close()
-        IsCapturing = False
+    End Sub
+
+    Public Sub SetAncillaryFrameData(Data As Byte())
+
+        If IsCapturing Then
+            frame.AncillaryData = Data
+        Else
+            Throw New InvalidOperationException("There is no encoding operation currently in progress.")
+        End If
 
     End Sub
+
 
     Public Sub AdvanceFrame()
 

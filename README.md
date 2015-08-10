@@ -20,16 +20,16 @@ Dim keyframeFrequency as Integer = 30
 showEncode.Initialize(framerate, keyframeFrequency)
 
 'add a payload to the current frame
-Dim payloadA as New DMXUniverse(1) 'create a dmx universe to contain the data for universe 1
+Dim frameOnePayload as New DMXUniverse(1) 'create a dmx universe to contain the data for universe 1
 
-showEncode.AddPayload(payload)
+showEncode.AddPayload(frameOnePayload)
 
 'Advance to the next frame
 showEncode.AdvanceFrame()
 
-Dim payloadB as New DMXUniverse(1) 'create a dmx universe to contain the data for universe 1
+Dim frameTwoPayload as New DMXUniverse(1) 'create a dmx universe to contain the data for universe 1
 
-showEncode.AddPayload(payload)
+showEncode.AddPayload(frameTwoPayload)
 
 'close the file
 showEncode.closeFile()

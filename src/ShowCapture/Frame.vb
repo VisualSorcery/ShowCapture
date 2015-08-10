@@ -17,7 +17,14 @@ Public Class Frame
         End Get
     End Property
 
-    Public Sub New(frameNumber As Integer, payloads As List(Of Payload))
+    Private _ancillaryData() As Byte
+    Public ReadOnly Property AncillaryData
+        Get
+            Return _ancillaryData
+        End Get
+    End Property
+
+    Public Sub New(frameNumber As Integer, payloads As List(Of Payload), ancillaryData() As Byte)
         _frameNumber = frameNumber
         _payloads = payloads
     End Sub
