@@ -1,6 +1,6 @@
 ﻿Namespace Payloads
 
-    Public Class MidiShowControl
+    Public Class MidiShowControlCommand
         Inherits Payload
 
         Public DeviceID As Byte

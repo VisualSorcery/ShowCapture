@@ -12,8 +12,8 @@ Namespace Codec.InternalPayloads
             End Get
         End Property
 
-        Private _command As MidiShowControl
-        Public ReadOnly Property Command As MidiShowControl
+        Private _command As MidiShowControlCommand
+        Public ReadOnly Property Command As MidiShowControlCommand
             Get
                 Return _command
             End Get
@@ -31,7 +31,7 @@ Namespace Codec.InternalPayloads
 
         Private Sub ReadFromBytes(buffer() As Byte)
 
-            _command = New MidiShowControl
+            _command = New MidiShowControlCommand
 
             Command.DeviceID = buffer(0)
             Command.CommandFormat = buffer(1)
@@ -46,9 +46,9 @@ Namespace Codec.InternalPayloads
 
         End Sub
 
-        Public Function GetContainer() As MidiShowControl
+        Public Function GetContainer() As MidiShowControlCommand
 
-            Dim msc As New MidiShowControl
+            Dim msc As New MidiShowControlCommand
 
             msc.DeviceID = Command.DeviceID
             msc.CommandFormat = Command.CommandFormat
@@ -59,7 +59,7 @@ Namespace Codec.InternalPayloads
 
         End Function
 
-        Public Sub SetCommand(command As MidiShowControl)
+        Public Sub SetCommand(command As MidiShowControlCommand)
 
             _command = command
 

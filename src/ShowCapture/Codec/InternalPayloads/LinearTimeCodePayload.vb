@@ -12,8 +12,8 @@ Namespace Codec.InternalPayloads
             End Get
         End Property
 
-        Private _value As LinearTimeCode
-        Public ReadOnly Property Value As LinearTimeCode
+        Private _value As LinearTimeCodeFrame
+        Public ReadOnly Property Value As LinearTimeCodeFrame
             Get
                 Return _value
             End Get
@@ -29,9 +29,9 @@ Namespace Codec.InternalPayloads
 
         End Sub
 
-        Public Function GetContainer() As LinearTimeCode
+        Public Function GetContainer() As LinearTimeCodeFrame
 
-            Dim ltc As New LinearTimeCode
+            Dim ltc As New LinearTimeCodeFrame
 
             ltc.FrameUnits = Value.FrameUnits
             ltc.FrameTens = Value.FrameTens
@@ -49,7 +49,7 @@ Namespace Codec.InternalPayloads
 
         Private Sub ReadFromBytes(buffer() As Byte)
 
-            _value = New LinearTimeCode
+            _value = New LinearTimeCodeFrame
 
             Value.FrameUnits = buffer(0)
             Value.FrameTens = buffer(1)
@@ -64,7 +64,7 @@ Namespace Codec.InternalPayloads
 
         End Sub
 
-        Public Sub SetValue(value As LinearTimeCode)
+        Public Sub SetValue(value As LinearTimeCodeFrame)
 
             _value = value
 

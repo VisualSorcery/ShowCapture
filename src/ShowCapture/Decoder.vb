@@ -103,12 +103,12 @@ Public Class Decoder
 
                                 ElseIf TypeOf captureFrame.Payloads(k) Is MidiShowControlPayload And i = frameNumber Then
 
-                                    Dim msc As MidiShowControlPayload = CType(captureFrame.Payloads(j), MidiShowControlPayload)
+                                    Dim msc As MidiShowControlPayload = CType(captureFrame.Payloads(k), MidiShowControlPayload)
                                     payloads.Add(msc.GetContainer)
 
                                 ElseIf TypeOf captureFrame.Payloads(k) Is LinearTimeCodePayload And i = frameNumber Then
 
-                                    Dim ltc As LinearTimeCodePayload = CType(captureFrame.Payloads(j), LinearTimeCodePayload)
+                                    Dim ltc As LinearTimeCodePayload = CType(captureFrame.Payloads(k), LinearTimeCodePayload)
                                     payloads.Add(ltc.GetContainer)
 
                                 End If

@@ -58,7 +58,7 @@ Public Class Encoder
 
     End Sub
 
-    Public Sub AddPayload(msc As MidiShowControl)
+    Public Sub AddPayload(msc As MidiShowControlCommand)
 
         If IsCapturing Then
 
@@ -72,7 +72,7 @@ Public Class Encoder
 
     End Sub
 
-    Public Sub AddPayload(ltc As LinearTimeCode)
+    Public Sub AddPayload(ltc As LinearTimeCodeFrame)
 
         If IsCapturing Then
 

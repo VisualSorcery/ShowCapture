@@ -1,6 +1,6 @@
 ﻿Namespace Payloads
 
-    Public Class LinearTimeCode
+    Public Class LinearTimeCodeFrame
         Inherits Payload
 
         Public FrameUnits As Byte
